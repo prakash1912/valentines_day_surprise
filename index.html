@@ -225,6 +225,186 @@
             color: white;
         }
 
+        /* Balloon Pop Game */
+        .balloon-container {
+            position: relative;
+            height: 450px;
+            margin: 30px 0;
+            overflow: hidden;
+            background: linear-gradient(180deg, #E0F7FF 0%, #FFF0F5 100%);
+            border-radius: 20px;
+            border: 3px solid #FFB6C1;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 70px;
+            height: 90px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            animation: float-balloon 4s ease-in-out infinite;
+        }
+
+        .balloon:hover {
+            transform: scale(1.1);
+        }
+
+        .balloon-body {
+            width: 70px;
+            height: 85px;
+            background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: relative;
+            box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .balloon-string {
+            position: absolute;
+            width: 2px;
+            height: 50px;
+            background: #FFB6C1;
+            left: 50%;
+            bottom: -50px;
+            transform: translateX(-50%);
+        }
+
+        @keyframes float-balloon {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .balloon-message {
+            position: absolute;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            font-size: 15px;
+            color: #FF1493;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 100;
+            animation: pop-message 0.5s ease;
+            border: 2px solid #FFB6C1;
+        }
+
+        @keyframes pop-message {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Fortune Cookie */
+        .fortune-cookie-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .fortune-cookie {
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .fortune-cookie:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .cookie-circle {
+            font-size: 120px;
+            animation: wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .fortune-message {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #FFE66D 0%, #FF6B6B 100%);
+            border-radius: 20px;
+            font-size: 1.3em;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            animation: fortuneReveal 0.8s ease;
+        }
+
+        @keyframes fortuneReveal {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Spin the Wheel */
+        .wheel-container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .wheel-pointer {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #FF1493;
+            position: relative;
+            margin: 0 auto 10px;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.3));
+        }
+
+        .wheel {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            border: 15px solid #FFD700;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .wheel-center {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 10;
+            border: 4px solid white;
+        }
+
+        .wheel-center:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .wheel-result {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* Memory game */
         .memory-grid {
             display: grid;
@@ -713,6 +893,15 @@
             .word-cell {
                 font-size: 0.8em;
             }
+
+            .wheel {
+                width: 280px;
+                height: 280px;
+            }
+
+            .balloon-container {
+                height: 350px;
+            }
         }
     </style>
 </head>
@@ -783,11 +972,29 @@
             <button class="btn" onclick="validateTask1()">Continue to Next Task →</button>
         </div>
 
-        <!-- Task 2: Choose Your Feelings -->
+        <!-- Task 2: Balloon Pop Game -->
         <div class="screen" id="task2">
             <div class="task-counter">Task 2 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 25%">25%</div>
+            </div>
+            <h2>🎈 Pop the Love Balloons!</h2>
+            <p>Pop all the balloons to reveal sweet messages! Click on each balloon! 💕</p>
+            
+            <div class="task-content">
+                <div class="balloon-container" id="balloonContainer"></div>
+                <div class="timer" id="timer2">Balloons popped: <span id="balloonCount">0</span>/8</div>
+            </div>
+            
+            <div class="success-message" id="success2">Amazing! You found all my love messages! 🎊</div>
+            <button class="btn" onclick="validateTask2()" style="display: none;" id="task2btn">Continue to Next Task →</button>
+        </div>
+
+        <!-- Task 3: Choose Your Feelings -->
+        <div class="screen" id="task3">
+            <div class="task-counter">Task 3 of 8 ✨</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 37.5%">37.5%</div>
             </div>
             <h2>💖 Express Your Heart</h2>
             <p>Choose all the feelings that describe how you feel about our friendship:</p>
@@ -803,69 +1010,81 @@
                 </div>
             </div>
             
-            <div class="error-message" id="error2">Please select at least one feeling! 💕</div>
-            <button class="btn" onclick="validateTask2()">Continue to Next Task →</button>
-        </div>
-
-        <!-- Task 3: Our Favorite Things -->
-        <div class="screen" id="task3">
-            <div class="task-counter">Task 3 of 8 ✨</div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 37.5%">37.5%</div>
-            </div>
-            <h2>💑 Our Favorite Things Together</h2>
-            <p>Choose all the things you love doing with me! (Select at least 3)</p>
-            
-            <div class="task-content">
-                <div class="choices" id="favoritesGrid">
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🍕 Eating Together</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🎬 Watching Movies</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🚗 Going on Drives</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">💬 Deep Talks</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">😂 Laughing Together</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🤗 Hugging</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">📸 Taking Photos</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🎵 Listening to Music</div>
-                </div>
-                <div class="timer" id="timer3">Selected: <span id="selectedCount">0</span> items</div>
-            </div>
-            
-            <div class="success-message" id="success3">Beautiful choices! These are our special moments! 💕</div>
-            <div class="error-message" id="error3">Please select at least 3 favorite things! 💕</div>
-            <button class="hint-btn" onclick="showHint(3)">Need a hint? 💡</button>
-            <div class="hint-box" id="hint3">
-                Just click on at least 3 things you enjoy doing with me! There's no wrong answer - just pick what makes your heart happy! 💖
-            </div>
+            <div class="error-message" id="error3">Please select at least one feeling! 💕</div>
             <button class="btn" onclick="validateTask3()">Continue to Next Task →</button>
         </div>
 
-        <!-- Task 4: Memory Card Game -->
+        <!-- Task 4: Fortune Cookie -->
         <div class="screen" id="task4">
             <div class="task-counter">Task 4 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 50%">50%</div>
+            </div>
+            <h2>🥠 Love Fortune Cookie</h2>
+            <p>Click the fortune cookie to reveal your romantic fortune!</p>
+            
+            <div class="task-content">
+                <div class="fortune-cookie-container">
+                    <div class="fortune-cookie" id="fortuneCookie" onclick="openFortuneCookie()">
+                        <div class="cookie-circle">🥠</div>
+                    </div>
+                    <p style="font-size: 15px; color: #FF69B4; font-weight: 600;">Click the cookie! ☝️</p>
+                    <div class="fortune-message" id="fortuneMessage"></div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="validateTask4()" style="display: none;" id="task4btn">Continue to Next Task →</button>
+        </div>
+
+        <!-- Task 5: Spin the Wheel -->
+        <div class="screen" id="task5">
+            <div class="task-counter">Task 5 of 8 ✨</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 62.5%">62.5%</div>
+            </div>
+            <h2>🎡 Spin the Love Wheel!</h2>
+            <p>Click the center to spin and discover what I promise you!</p>
+            
+            <div class="task-content">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel">
+                        <div class="wheel-center" onclick="spinWheel()">SPIN</div>
+                    </div>
+                    <div class="wheel-result" id="wheelResult">Click SPIN to begin! 💕</div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="validateTask5()" style="display: none;" id="task5btn">Continue to Next Task →</button>
+        </div>
+
+        <!-- Task 6: Memory Card Game -->
+        <div class="screen" id="task6">
+            <div class="task-counter">Task 6 of 8 ✨</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%">75%</div>
             </div>
             <h2>💕 Match Our Love</h2>
             <p>Find all the matching pairs of hearts! Click on cards to flip them.</p>
             
             <div class="task-content">
                 <div class="memory-grid" id="memoryGrid"></div>
-                <div class="timer" id="timer4">Pairs found: <span id="pairsCount">0</span>/8</div>
+                <div class="timer" id="timer6">Pairs found: <span id="pairsCount">0</span>/8</div>
             </div>
             
-            <div class="success-message" id="success4">Amazing! You found all the pairs! 🎊</div>
-            <button class="hint-btn" onclick="showHint(4)">Need a hint? 💡</button>
-            <div class="hint-box" id="hint4">
+            <div class="success-message" id="success6">Amazing! You found all the pairs! 🎊</div>
+            <button class="hint-btn" onclick="showHint(6)">Need a hint? 💡</button>
+            <div class="hint-box" id="hint6">
                 Just like in our friendship, it's all about finding the perfect match! Take your time and remember where each heart is. 💖
             </div>
-            <button class="btn" onclick="validateTask4()" style="display: none;" id="task4btn">Continue to Next Task →</button>
+            <button class="btn" onclick="validateTask6()" style="display: none;" id="task6btn">Continue to Next Task →</button>
         </div>
 
-        <!-- Task 5: Love Letter -->
-        <div class="screen" id="task5">
-            <div class="task-counter">Task 5 of 8 ✨</div>
+        <!-- Task 7: Love Letter -->
+        <div class="screen" id="task7">
+            <div class="task-counter">Task 7 of 8 ✨</div>
             <div class="progress-bar">
-                <div class="progress-fill" style="width: 62.5%">62.5%</div>
+                <div class="progress-fill" style="width: 87.5%">87.5%</div>
             </div>
             <h2>💌 A Letter From Your Heart</h2>
             <p>Write a few words about what our friendship means to you:</p>
@@ -878,56 +1097,7 @@ What we share together means...
 (Write anything from your heart - there's no right or wrong answer. Just be you! 💕)"></textarea>
             </div>
             
-            <div class="error-message" id="error5">Please write something from your heart! 💕</div>
-            <button class="btn" onclick="validateTask5()">Continue to Next Task →</button>
-        </div>
-
-        <!-- Task 6: Word Search -->
-        <div class="screen" id="task6">
-            <div class="task-counter">Task 6 of 8 ✨</div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 75%">75%</div>
-            </div>
-            <h2>🔍 Find Our Special Words</h2>
-            <p>Find all the hidden words in the grid! (Words can be horizontal, vertical, or diagonal)</p>
-            <div class="surprise-box">
-                💝 These words represent what we mean to each other! 💝
-            </div>
-            
-            <div class="task-content">
-                <div class="words-list" id="wordsList"></div>
-                <div class="word-search-grid" id="wordSearchGrid"></div>
-                <div class="timer" id="timer6">Words found: <span id="wordsCount">0</span>/7</div>
-            </div>
-            
-            <div class="success-message" id="success6">Wonderful! You found all our special words! 💝</div>
-            <button class="hint-btn" onclick="showHint(6)">Need a hint? 💡</button>
-            <div class="hint-box" id="hint6">
-                Look carefully! The words can go in any direction. Click and drag to select letters. Each word represents something special about our friendship! 💖
-            </div>
-            <button class="btn" onclick="validateTask6()" style="display: none;" id="task6btn">Continue to Next Task →</button>
-        </div>
-
-        <!-- Task 7: Final Promise -->
-        <div class="screen" id="task7">
-            <div class="task-counter">Task 7 of 8 ✨</div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 87.5%">87.5%</div>
-            </div>
-            <h2>💍 Our Promise</h2>
-            <p>One last thing before the big reveal...</p>
-            
-            <div class="task-content">
-                <div class="task-question">What do you promise for our future together?</div>
-                <div class="choices">
-                    <div class="choice-btn" onclick="selectSingleChoice(this)">💑 To always be with you</div>
-                    <div class="choice-btn" onclick="selectSingleChoice(this)">🌟 To support your dreams</div>
-                    <div class="choice-btn" onclick="selectSingleChoice(this)">💕 To be your best friend forever</div>
-                    <div class="choice-btn" onclick="selectSingleChoice(this)">🌈 All of the above!</div>
-                </div>
-            </div>
-            
-            <div class="error-message" id="error7">Please select your promise! 💕</div>
+            <div class="error-message" id="error7">Please write something from your heart! 💕</div>
             <button class="btn" onclick="validateTask7()">Continue to Last Task →</button>
         </div>
 
@@ -1018,13 +1188,22 @@ What we share together means...
         let memoryCards = [];
         let flippedCards = [];
         let matchedPairs = 0;
-        let wordSearchState = [];
-        let foundWords = [];
-        let selectedCells = [];
         let canvas, ctx;
         let isDrawing = false;
         let hasDrawn = false;
-        let favoritesSelected = 0;
+        let balloonsPopped = 0;
+        let fortuneOpened = false;
+        let wheelSpun = false;
+        let wheelPromises = [
+            "I promise to always make you laugh! 😂",
+            "I promise to be there when you need me! 🤗",
+            "I promise to support all your dreams! 🌟",
+            "I promise our friendship will last forever! 💕",
+            "I promise to always listen to you! 👂",
+            "I promise to share all my snacks with you! 🍕",
+            "I promise to be your adventure buddy! 🚗",
+            "I promise to keep all our secrets! 🤫"
+        ];
 
         // Response capture object
         let userResponses = {
@@ -1077,23 +1256,22 @@ What we share together means...
                     first_meet_date: userResponses.responses.task1?.firstMeetDate || "Not answered",
                     
                     // Task 2
-                    feelings: userResponses.responses.task2?.feelings?.join(', ') || "Not answered",
+                    balloon_game: userResponses.responses.task2?.message || "Not completed",
                     
                     // Task 3
-                    activities: userResponses.responses.task3?.favoriteActivities?.join(', ') || "Not answered",
+                    feelings: userResponses.responses.task3?.feelings?.join(', ') || "Not answered",
                     
                     // Task 4
-                    memory_game: userResponses.responses.task4?.message || "Not completed",
+                    fortune: userResponses.responses.task4?.fortune || "Not revealed",
                     
                     // Task 5
-                    love_letter: userResponses.responses.task5?.loveLetter || "No letter written",
+                    wheel_promise: userResponses.responses.task5?.promise || "Not spun",
                     
                     // Task 6
-                    word_search: userResponses.responses.task6?.message || "Not completed",
-                    words_found: userResponses.responses.task6?.wordsFound?.join(', ') || "",
+                    memory_game: userResponses.responses.task6?.message || "Not completed",
                     
                     // Task 7
-                    promise: userResponses.responses.task7?.promise || "Not answered",
+                    love_letter: userResponses.responses.task7?.loveLetter || "No letter written",
                     
                     // Task 8
                     drawing_message: userResponses.responses.task8?.message || "No drawing"
@@ -1130,23 +1308,23 @@ What we share together means...
             message += `• Favorite place: ${userResponses.responses.task1?.favoritePlace || 'N/A'}\n`;
             message += `• First meet: ${userResponses.responses.task1?.firstMeetDate || 'N/A'}\n\n`;
             
-            message += `*Task 2: Feelings*\n`;
-            message += `${userResponses.responses.task2?.feelings?.join(', ') || 'N/A'}\n\n`;
+            message += `*Task 2: Balloon Pop Game*\n`;
+            message += `${userResponses.responses.task2?.message || 'N/A'}\n\n`;
             
-            message += `*Task 3: Favorite Activities*\n`;
-            message += `${userResponses.responses.task3?.favoriteActivities?.join(', ') || 'N/A'}\n\n`;
+            message += `*Task 3: Feelings*\n`;
+            message += `${userResponses.responses.task3?.feelings?.join(', ') || 'N/A'}\n\n`;
             
-            message += `*Task 4: Memory Game*\n`;
-            message += `${userResponses.responses.task4?.message || 'N/A'}\n\n`;
+            message += `*Task 4: Fortune Cookie*\n`;
+            message += `${userResponses.responses.task4?.fortune || 'N/A'}\n\n`;
             
-            message += `*Task 5: Love Letter*\n`;
-            message += `${userResponses.responses.task5?.loveLetter || 'N/A'}\n\n`;
+            message += `*Task 5: Love Wheel*\n`;
+            message += `${userResponses.responses.task5?.promise || 'N/A'}\n\n`;
             
-            message += `*Task 6: Word Search*\n`;
-            message += `Words found: ${userResponses.responses.task6?.wordsFound?.join(', ') || 'N/A'}\n\n`;
+            message += `*Task 6: Memory Game*\n`;
+            message += `${userResponses.responses.task6?.message || 'N/A'}\n\n`;
             
-            message += `*Task 7: Promise*\n`;
-            message += `${userResponses.responses.task7?.promise || 'N/A'}\n\n`;
+            message += `*Task 7: Love Letter*\n`;
+            message += `${userResponses.responses.task7?.loveLetter || 'N/A'}\n\n`;
             
             message += `*Task 8: Drawing*\n`;
             message += `${userResponses.responses.task8?.message || 'N/A'}\n\n`;
@@ -1201,9 +1379,8 @@ What we share together means...
             document.getElementById(screenId).classList.add('active');
             currentTask = screenId;
             
-            if (screenId === 'task3') initPuzzle();
-            if (screenId === 'task4') initMemoryGame();
-            if (screenId === 'task6') initWordSearch();
+            if (screenId === 'task2') initBalloonGame();
+            if (screenId === 'task6') initMemoryGame();
             if (screenId === 'task8') initCanvas();
             if (screenId === 'final') celebrateFinal();
         }
@@ -1232,60 +1409,184 @@ What we share together means...
             showScreen('task2');
         }
 
+        // ============================================
+        // TASK 2: BALLOON POP GAME
+        // ============================================
+        
+        function initBalloonGame() {
+            const container = document.getElementById('balloonContainer');
+            container.innerHTML = '';
+            balloonsPopped = 0;
+            document.getElementById('balloonCount').textContent = '0';
+            
+            const balloonMessages = [
+                "You're amazing! 💖",
+                "You make me smile! 😊",
+                "Best friends forever! 👯",
+                "You're my sunshine! ☀️",
+                "Thanks for everything! 🙏",
+                "You're special to me! ⭐",
+                "I appreciate you! 💝",
+                "You're the best! 🏆"
+            ];
+            
+            const colors = ['#FF69B4', '#FF1493', '#FF6B9D', '#C71585', '#DB7093', '#FFC0CB', '#FFB6C1', '#FF69B4'];
+            
+            for (let i = 0; i < 8; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = (10 + (i % 4) * 23) + '%';
+                balloon.style.top = (30 + Math.floor(i / 4) * 45) + '%';
+                balloon.style.animationDelay = (i * 0.2) + 's';
+                balloon.innerHTML = `
+                    <div class="balloon-body" style="background: linear-gradient(135deg, ${colors[i]} 0%, ${colors[(i+1)%8]} 100%);"></div>
+                    <div class="balloon-string"></div>
+                `;
+                balloon.onclick = function() { popBalloon(this, balloonMessages[i]); };
+                container.appendChild(balloon);
+            }
+        }
+
+        function popBalloon(balloon, message) {
+            if (balloon.classList.contains('popped')) return;
+            
+            balloon.classList.add('popped');
+            balloonsPopped++;
+            document.getElementById('balloonCount').textContent = balloonsPopped;
+            
+            // Create message
+            const messageEl = document.createElement('div');
+            messageEl.className = 'balloon-message';
+            messageEl.textContent = message;
+            messageEl.style.left = balloon.style.left;
+            messageEl.style.top = balloon.style.top;
+            document.getElementById('balloonContainer').appendChild(messageEl);
+            
+            // Pop animation
+            balloon.style.animation = 'none';
+            balloon.style.transform = 'scale(0)';
+            balloon.style.opacity = '0';
+            
+            setTimeout(() => balloon.remove(), 300);
+            setTimeout(() => messageEl.remove(), 3000);
+            
+            if (balloonsPopped === 8) {
+                setTimeout(() => {
+                    document.getElementById('success2').classList.add('show');
+                    document.getElementById('task2btn').style.display = 'block';
+                    createConfetti();
+                    createFireworks();
+                }, 500);
+            }
+        }
+
+        function validateTask2() {
+            userResponses.responses.task2 = {
+                completed: true,
+                balloonsPopped: 8,
+                message: "Popped all love balloons! 🎈"
+            };
+            showScreen('task3');
+        }
+
+        // ============================================
+        // TASK 3: EXPRESS YOUR HEART
+        // ============================================
+        
         function toggleChoice(element) {
             element.classList.toggle('selected');
         }
 
-        function validateTask2() {
-            const selected = document.querySelectorAll('#task2 .choice-btn.selected');
-            if (selected.length === 0) {
-                showError(2);
-                return;
-            }
-            
-            userResponses.responses.task2 = {
-                feelings: Array.from(selected).map(el => el.textContent.trim())
-            };
-            
-            createConfetti();
-            showScreen('task3');
-        }
-
-        function initPuzzle() {
-            favoritesSelected = 0;
-            document.getElementById('selectedCount').textContent = '0';
-        }
-
-        function toggleFavorite(element) {
-            if (element.classList.contains('selected')) {
-                element.classList.remove('selected');
-                favoritesSelected--;
-            } else {
-                element.classList.add('selected');
-                favoritesSelected++;
-            }
-            document.getElementById('selectedCount').textContent = favoritesSelected;
-        }
-
         function validateTask3() {
-            if (favoritesSelected < 3) {
+            const selected = document.querySelectorAll('#task3 .choice-btn.selected');
+            if (selected.length === 0) {
                 showError(3);
                 return;
             }
             
-            const selected = document.querySelectorAll('#task3 .choice-btn.selected');
             userResponses.responses.task3 = {
-                favoriteActivities: Array.from(selected).map(el => el.textContent.trim())
+                feelings: Array.from(selected).map(el => el.textContent.trim())
             };
             
-            document.getElementById('success3').classList.add('show');
             createConfetti();
-            setTimeout(() => {
-                showScreen('task4');
-            }, 1500);
+            showScreen('task4');
         }
 
-        // Memory Game
+        // ============================================
+        // TASK 4: FORTUNE COOKIE
+        // ============================================
+        
+        function openFortuneCookie() {
+            if (fortuneOpened) return;
+            
+            const fortunes = [
+                "Your friendship brings endless joy and happiness! 💖",
+                "Together, you two will create beautiful memories forever! ✨",
+                "True friends are like stars - always shining bright! ⭐",
+                "Your bond is stronger than any challenge! 💪",
+                "Love and laughter will always fill your days together! 😊",
+                "The best is yet to come in your friendship! 🌈"
+            ];
+            
+            const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            const fortuneMsg = document.getElementById('fortuneMessage');
+            fortuneMsg.textContent = fortune;
+            fortuneMsg.style.display = 'block';
+            
+            fortuneOpened = true;
+            
+            userResponses.responses.task4 = {
+                fortune: fortune
+            };
+            
+            createConfetti();
+            
+            setTimeout(() => {
+                document.getElementById('task4btn').style.display = 'block';
+            }, 1000);
+        }
+
+        function validateTask4() {
+            showScreen('task5');
+        }
+
+        // ============================================
+        // TASK 5: SPIN THE WHEEL
+        // ============================================
+        
+        function spinWheel() {
+            if (wheelSpun) return;
+            
+            const wheel = document.getElementById('wheel');
+            const randomSpin = 1800 + Math.floor(Math.random() * 360);
+            wheel.style.transform = `rotate(${randomSpin}deg)`;
+            
+            setTimeout(() => {
+                const selectedPromise = wheelPromises[Math.floor(Math.random() * wheelPromises.length)];
+                document.getElementById('wheelResult').textContent = selectedPromise;
+                
+                userResponses.responses.task5 = {
+                    promise: selectedPromise
+                };
+                
+                wheelSpun = true;
+                createConfetti();
+                createFireworks();
+                
+                setTimeout(() => {
+                    document.getElementById('task5btn').style.display = 'block';
+                }, 1000);
+            }, 4000);
+        }
+
+        function validateTask5() {
+            showScreen('task6');
+        }
+
+        // ============================================
+        // TASK 6: MEMORY GAME
+        // ============================================
+        
         function initMemoryGame() {
             const symbols = ['💕', '💖', '💗', '💝', '💓', '💞', '💘', '💌'];
             const cards = [...symbols, ...symbols];
@@ -1343,8 +1644,8 @@ What we share together means...
                 document.getElementById('pairsCount').textContent = matchedPairs;
                 
                 if (matchedPairs === 8) {
-                    document.getElementById('success4').classList.add('show');
-                    document.getElementById('task4btn').style.display = 'block';
+                    document.getElementById('success6').classList.add('show');
+                    document.getElementById('task6btn').style.display = 'block';
                     createConfetti();
                     createFireworks();
                 }
@@ -1356,220 +1657,39 @@ What we share together means...
             flippedCards = [];
         }
 
-        function validateTask4() {
-            userResponses.responses.task4 = {
+        function validateTask6() {
+            userResponses.responses.task6 = {
                 completed: true,
                 pairsMatched: matchedPairs,
                 message: "Successfully completed the memory matching game! 🎮"
             };
             
-            showScreen('task5');
-        }
-
-        function validateTask5() {
-            const letter = document.getElementById('loveLetter').value.trim();
-            if (letter.length < 10) {
-                showError(5);
-                return;
-            }
-            
-            userResponses.responses.task5 = {
-                loveLetter: letter
-            };
-            
-            createConfetti();
-            showScreen('task6');
-        }
-
-        // Word Search - NOW WITH "FRIEND"!
-        function initWordSearch() {
-            const words = ['LOVE', 'HAPPY', 'HEART', 'FRIEND', 'FOREVER', 'JOY', 'SMILE'];
-            const gridSize = 10;
-            const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
-            
-            // Place each word
-            words.forEach(word => {
-                let placed = false;
-                let attempts = 0;
-                while (!placed && attempts < 100) {
-                    attempts++;
-                    const direction = Math.floor(Math.random() * 3); // 0=horizontal, 1=vertical, 2=diagonal
-                    const row = Math.floor(Math.random() * gridSize);
-                    const col = Math.floor(Math.random() * gridSize);
-                    
-                    if (canPlaceWord(grid, word, row, col, direction, gridSize)) {
-                        placeWord(grid, word, row, col, direction);
-                        placed = true;
-                    }
-                }
-            });
-            
-            // Fill empty cells with random letters
-            for (let i = 0; i < gridSize; i++) {
-                for (let j = 0; j < gridSize; j++) {
-                    if (grid[i][j] === '') {
-                        grid[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                    }
-                }
-            }
-            
-            wordSearchState = grid;
-            foundWords = [];
-            selectedCells = [];
-            document.getElementById('wordsCount').textContent = '0';
-            renderWordSearch(words);
-        }
-
-        function canPlaceWord(grid, word, row, col, direction, gridSize) {
-            if (direction === 0) { // Horizontal
-                if (col + word.length > gridSize) return false;
-                for (let i = 0; i < word.length; i++) {
-                    if (grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
-                }
-            } else if (direction === 1) { // Vertical
-                if (row + word.length > gridSize) return false;
-                for (let i = 0; i < word.length; i++) {
-                    if (grid[row + i][col] !== '' && grid[row + i][col] !== word[i]) return false;
-                }
-            } else { // Diagonal
-                if (row + word.length > gridSize || col + word.length > gridSize) return false;
-                for (let i = 0; i < word.length; i++) {
-                    if (grid[row + i][col + i] !== '' && grid[row + i][col + i] !== word[i]) return false;
-                }
-            }
-            return true;
-        }
-
-        function placeWord(grid, word, row, col, direction) {
-            for (let i = 0; i < word.length; i++) {
-                if (direction === 0) {
-                    grid[row][col + i] = word[i];
-                } else if (direction === 1) {
-                    grid[row + i][col] = word[i];
-                } else {
-                    grid[row + i][col + i] = word[i];
-                }
-            }
-        }
-
-        function renderWordSearch(words) {
-            const grid = document.getElementById('wordSearchGrid');
-            const wordsList = document.getElementById('wordsList');
-            grid.innerHTML = '';
-            wordsList.innerHTML = '';
-            
-            wordSearchState.forEach((row, i) => {
-                row.forEach((letter, j) => {
-                    const cell = document.createElement('div');
-                    cell.className = 'word-cell';
-                    cell.textContent = letter;
-                    cell.dataset.row = i;
-                    cell.dataset.col = j;
-                    cell.addEventListener('click', function() {
-                        handleCellClick(this);
-                    });
-                    grid.appendChild(cell);
-                });
-            });
-            
-            words.forEach(word => {
-                const wordItem = document.createElement('div');
-                wordItem.className = 'word-item';
-                wordItem.textContent = word;
-                wordItem.dataset.word = word;
-                wordsList.appendChild(wordItem);
-            });
-        }
-
-        function handleCellClick(cell) {
-            const words = ['LOVE', 'HAPPY', 'HEART', 'FRIEND', 'FOREVER', 'JOY', 'SMILE'];
-            
-            if (cell.classList.contains('selected')) {
-                cell.classList.remove('selected');
-                const index = selectedCells.findIndex(c => c === cell);
-                if (index > -1) selectedCells.splice(index, 1);
-            } else {
-                cell.classList.add('selected');
-                selectedCells.push(cell);
-            }
-            
-            checkForWord(words);
-        }
-
-        function checkForWord(words) {
-            if (selectedCells.length < 3) return;
-            
-            const selectedText = selectedCells.map(cell => cell.textContent).join('');
-            const reversedText = selectedText.split('').reverse().join('');
-            
-            words.forEach(word => {
-                if ((selectedText === word || reversedText === word) && !foundWords.includes(word)) {
-                    foundWords.push(word);
-                    
-                    selectedCells.forEach(cell => {
-                        cell.classList.remove('selected');
-                        cell.classList.add('found');
-                    });
-                    
-                    const wordItem = document.querySelector(`.word-item[data-word="${word}"]`);
-                    if (wordItem) wordItem.classList.add('found');
-                    
-                    selectedCells = [];
-                    document.getElementById('wordsCount').textContent = foundWords.length;
-                    
-                    // Celebrate finding FRIEND!
-                    if (word === 'FRIEND') {
-                        createFireworks();
-                        setTimeout(() => {
-                            alert('🎊 YES! We are FRIENDS forever! 🎊');
-                        }, 500);
-                    }
-                    
-                    if (foundWords.length === 7) {
-                        setTimeout(() => {
-                            document.getElementById('success6').classList.add('show');
-                            document.getElementById('task6btn').style.display = 'block';
-                            createConfetti();
-                            createFireworks();
-                        }, 500);
-                    }
-                }
-            });
-        }
-
-        function validateTask6() {
-            userResponses.responses.task6 = {
-                completed: true,
-                wordsFound: foundWords,
-                message: "Found all the special words including FRIEND! 🔍💕"
-            };
-            
             showScreen('task7');
         }
 
-        function selectSingleChoice(element) {
-            document.querySelectorAll('#task7 .choice-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            element.classList.add('selected');
-        }
-
+        // ============================================
+        // TASK 7: LOVE LETTER
+        // ============================================
+        
         function validateTask7() {
-            const selected = document.querySelector('#task7 .choice-btn.selected');
-            if (!selected) {
+            const letter = document.getElementById('loveLetter').value.trim();
+            if (letter.length < 10) {
                 showError(7);
                 return;
             }
             
             userResponses.responses.task7 = {
-                promise: selected.textContent.trim()
+                loveLetter: letter
             };
             
             createConfetti();
             showScreen('task8');
         }
 
-        // Canvas Drawing
+        // ============================================
+        // TASK 8: CANVAS DRAWING
+        // ============================================
+        
         function initCanvas() {
             canvas = document.getElementById('drawCanvas');
             ctx = canvas.getContext('2d');
@@ -1679,7 +1799,10 @@ What we share together means...
             }, 3000);
         }
 
-        // Helper Functions
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+        
         function showError(taskNum) {
             const error = document.getElementById('error' + taskNum);
             error.classList.add('show');
