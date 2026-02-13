@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A Special Valentine's Day Surprise 💝</title>
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box; 
+            box-sizing: border-box;
         }
 
         body {
@@ -135,6 +139,11 @@
 
         .btn:active {
             transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         /* Task counter */
@@ -304,6 +313,7 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
+            font-size: 0.9em;
         }
 
         .word-cell:hover {
@@ -495,6 +505,46 @@
             animation: fadeIn 0.5s ease-in;
         }
 
+        /* Loading spinner */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Confetti */
         .confetti {
             position: fixed;
@@ -612,6 +662,27 @@
             animation: pulse 2s infinite;
         }
 
+        /* Surprise boxes */
+        .surprise-box {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            animation: surpriseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes surpriseGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(162, 155, 254, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(162, 155, 254, 0.8);
+            }
+        }
+
         /* Responsive design */
         @media (max-width: 768px) {
             h1 {
@@ -638,10 +709,23 @@
             .choices {
                 grid-template-columns: 1fr;
             }
+
+            .word-cell {
+                font-size: 0.8em;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h2 style="color: #667eea; margin-top: 20px;">Sending your lovely responses... 💌</h2>
+            <p style="color: #666;">Please wait a moment 💕</p>
+        </div>
+    </div>
+
     <!-- Floating hearts background -->
     <div class="hearts-container" id="heartsContainer"></div>
 
@@ -650,7 +734,7 @@
         <div class="screen active" id="entry">
             <h1>💝 Before We Begin... 💝</h1>
             <div style="margin: 60px 0;">
-                <h2 style="font-size: 2.5em; color: #d946ef; margin-bottom: 40px;">Do You Be My Best Friend?</h2>
+                <h2 style="font-size: 2.5em; color: #d946ef; margin-bottom: 40px;">Do You Love Me?</h2>
                 <div style="display: flex; gap: 30px; justify-content: center; align-items: center; margin-top: 50px;">
                     <button class="btn" style="background: linear-gradient(135deg, #00b894 0%, #55efc4 100%); font-size: 1.3em; padding: 20px 60px;" onclick="answerYes()">💕 YES! 💕</button>
                     <button class="btn" id="noBtn" style="background: linear-gradient(135deg, #ff7675 0%, #d63031 100%); font-size: 1.3em; padding: 20px 60px; position: relative;" onmouseover="moveNoButton()" onclick="moveNoButton()">😢 No</button>
@@ -662,15 +746,18 @@
         <div class="screen" id="welcome">
             <h1>💝 Welcome, Aswini! 💝</h1>
             <p>Happy Valentine's Day, My Best Friend! ❤️</p>
-            <p>I've prepared something special for you today. This is not just a simple message - it's a journey through our friendship, our memories, and everything that makes us special.</p>
-            <p>Are you ready to embark on this adventure? Complete the tasks ahead, and at the end, you'll discover a beautiful surprise waiting for you!</p>
-            <p style="font-style: italic; color: #667eea;">Take your time, enjoy every moment, and know that every task represents a piece of my heart. 💕</p>
-            <button class="btn" onclick="startJourney()">Let's Begin Our Journey! 💖</button>
+            <div class="surprise-box">
+                ✨ Get ready for an amazing adventure through our friendship! ✨
+            </div>
+            <p>I've prepared something incredibly special for you today. This is not just a simple message - it's a magical journey through our friendship, our memories, and everything that makes us special.</p>
+            <p>Complete 8 fun challenges, and at the end, you'll discover a beautiful surprise that will make your heart flutter! 💖</p>
+            <p style="font-style: italic; color: #667eea;">Take your time, enjoy every moment, and know that every task represents a piece of my heart. Your responses will be automatically saved as you complete each task! 💕</p>
+            <button class="btn" onclick="startJourney()">Let's Begin Our Amazing Journey! 💖</button>
         </div>
 
         <!-- Task 1: Love Questions -->
         <div class="screen" id="task1">
-            <div class="task-counter">Task 1 of 8</div>
+            <div class="task-counter">Task 1 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 12.5%">12.5%</div>
             </div>
@@ -678,7 +765,7 @@
             <p>Let's see how well you remember our special moments together!</p>
             
             <div class="task-content">
-                <div class="task-question">What was your first thought when you meet me?</div>
+                <div class="task-question">What was your first thought when you met me?</div>
                 <input type="text" id="q1" placeholder="Type your answer here...">
                 
                 <div class="task-question">What's our favorite place to eat together?</div>
@@ -698,12 +785,12 @@
 
         <!-- Task 2: Choose Your Feelings -->
         <div class="screen" id="task2">
-            <div class="task-counter">Task 2 of 8</div>
+            <div class="task-counter">Task 2 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 25%">25%</div>
             </div>
             <h2>💖 Express Your Heart</h2>
-            <p>Choose all the feelings that describe how you feel about us:</p>
+            <p>Choose all the feelings that describe how you feel about our friendship:</p>
             
             <div class="task-content">
                 <div class="choices">
@@ -722,7 +809,7 @@
 
         <!-- Task 3: Our Favorite Things -->
         <div class="screen" id="task3">
-            <div class="task-counter">Task 3 of 8</div>
+            <div class="task-counter">Task 3 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 37.5%">37.5%</div>
             </div>
@@ -736,7 +823,7 @@
                     <div class="choice-btn" onclick="toggleFavorite(this)">🚗 Going on Drives</div>
                     <div class="choice-btn" onclick="toggleFavorite(this)">💬 Deep Talks</div>
                     <div class="choice-btn" onclick="toggleFavorite(this)">😂 Laughing Together</div>
-                    <div class="choice-btn" onclick="toggleFavorite(this)">🤗 Cuddling</div>
+                    <div class="choice-btn" onclick="toggleFavorite(this)">🤗 Hugging</div>
                     <div class="choice-btn" onclick="toggleFavorite(this)">📸 Taking Photos</div>
                     <div class="choice-btn" onclick="toggleFavorite(this)">🎵 Listening to Music</div>
                 </div>
@@ -754,7 +841,7 @@
 
         <!-- Task 4: Memory Card Game -->
         <div class="screen" id="task4">
-            <div class="task-counter">Task 4 of 8</div>
+            <div class="task-counter">Task 4 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 50%">50%</div>
             </div>
@@ -769,22 +856,22 @@
             <div class="success-message" id="success4">Amazing! You found all the pairs! 🎊</div>
             <button class="hint-btn" onclick="showHint(4)">Need a hint? 💡</button>
             <div class="hint-box" id="hint4">
-                Just like in our relationship, it's all about finding the perfect match! Take your time and remember where each heart is. 💖
+                Just like in our friendship, it's all about finding the perfect match! Take your time and remember where each heart is. 💖
             </div>
             <button class="btn" onclick="validateTask4()" style="display: none;" id="task4btn">Continue to Next Task →</button>
         </div>
 
         <!-- Task 5: Love Letter -->
         <div class="screen" id="task5">
-            <div class="task-counter">Task 5 of 8</div>
+            <div class="task-counter">Task 5 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 62.5%">62.5%</div>
             </div>
             <h2>💌 A Letter From Your Heart</h2>
-            <p>Write a few words about what our relationship means to you:</p>
+            <p>Write a few words about what our friendship means to you:</p>
             
             <div class="task-content">
-                <textarea id="loveLetter" placeholder="Dear Love, 
+                <textarea id="loveLetter" placeholder="Dear Best Friend, 
 
 What we share together means...
 
@@ -797,30 +884,33 @@ What we share together means...
 
         <!-- Task 6: Word Search -->
         <div class="screen" id="task6">
-            <div class="task-counter">Task 6 of 8</div>
+            <div class="task-counter">Task 6 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 75%">75%</div>
             </div>
-            <h2>🔍 Find Our Love Words</h2>
+            <h2>🔍 Find Our Special Words</h2>
             <p>Find all the hidden words in the grid! (Words can be horizontal, vertical, or diagonal)</p>
+            <div class="surprise-box">
+                💝 These words represent what we mean to each other! 💝
+            </div>
             
             <div class="task-content">
                 <div class="words-list" id="wordsList"></div>
                 <div class="word-search-grid" id="wordSearchGrid"></div>
-                <div class="timer" id="timer6">Words found: <span id="wordsCount">0</span>/6</div>
+                <div class="timer" id="timer6">Words found: <span id="wordsCount">0</span>/7</div>
             </div>
             
-            <div class="success-message" id="success6">Wonderful! You found all our love words! 💝</div>
+            <div class="success-message" id="success6">Wonderful! You found all our special words! 💝</div>
             <button class="hint-btn" onclick="showHint(6)">Need a hint? 💡</button>
             <div class="hint-box" id="hint6">
-                Look carefully! The words can go in any direction. Click and drag to select letters. Each word represents something special about us! 💖
+                Look carefully! The words can go in any direction. Click and drag to select letters. Each word represents something special about our friendship! 💖
             </div>
             <button class="btn" onclick="validateTask6()" style="display: none;" id="task6btn">Continue to Next Task →</button>
         </div>
 
         <!-- Task 7: Final Promise -->
         <div class="screen" id="task7">
-            <div class="task-counter">Task 7 of 8</div>
+            <div class="task-counter">Task 7 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 87.5%">87.5%</div>
             </div>
@@ -832,23 +922,23 @@ What we share together means...
                 <div class="choices">
                     <div class="choice-btn" onclick="selectSingleChoice(this)">💑 To always be with you</div>
                     <div class="choice-btn" onclick="selectSingleChoice(this)">🌟 To support your dreams</div>
-                    <div class="choice-btn" onclick="selectSingleChoice(this)">💕 To be your best friend</div>
+                    <div class="choice-btn" onclick="selectSingleChoice(this)">💕 To be your best friend forever</div>
                     <div class="choice-btn" onclick="selectSingleChoice(this)">🌈 All of the above!</div>
                 </div>
             </div>
             
             <div class="error-message" id="error7">Please select your promise! 💕</div>
-            <button class="btn" onclick="validateTask7()">Continue to Next Task →</button>
+            <button class="btn" onclick="validateTask7()">Continue to Last Task →</button>
         </div>
 
         <!-- Task 8: Draw Your Heart -->
         <div class="screen" id="task8">
-            <div class="task-counter">Task 8 of 8</div>
+            <div class="task-counter">Task 8 of 8 ✨</div>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: 100%">100%</div>
             </div>
             <h2>💝 Draw Your Love</h2>
-            <p>Use your finger or mouse to draw a heart for me! Just scribble anything - it's the thought that counts! 💕</p>
+            <p>Use your finger or mouse to draw something for me! Just scribble anything - it's the thought that counts! 💕</p>
             
             <div class="task-content">
                 <canvas id="drawCanvas" style="border: 3px solid #667eea; border-radius: 15px; background: white; cursor: crosshair; display: block; margin: 20px auto; touch-action: none;"></canvas>
@@ -862,7 +952,7 @@ What we share together means...
                 Just draw anything with your heart! A simple scribble, a heart shape, or even just your initials - anything you draw with love is perfect! 💖
             </div>
             <div class="success-message" id="success8">Beautiful! Your heart is perfect! 🎨💕</div>
-            <button class="btn" onclick="validateTask8()" id="task8btn" style="display: none;">Reveal My Surprise! 🎁</button>
+            <button class="btn" onclick="validateTask8()" id="task8btn" style="display: none;">Complete & See Your Surprise! 🎁✨</button>
         </div>
 
         <!-- Final Reveal -->
@@ -871,18 +961,18 @@ What we share together means...
                 <h1>💝 My Dearest Aswini 💝</h1>
                 
                 <div class="message-box">
-                    <p><strong>Happy Valentine's Day, My Dear Friend!</strong></p>
+                    <p><strong>Happy Valentine's Day, My Wonderful Best Friend!</strong></p>
                     <p>You've completed this journey, just like how we complete each other every single day. Each task represented a piece of our beautiful story together.</p>
                     <p>From the moment I met you, my life changed forever. You brought colors to my world, joy to my heart, and meaning to every moment we share.</p>
-                    <p>Every line of code I wrote for this website, every task I created, was filled with love for you. You're not just my Friend - you're my forever.</p>
+                    <p>Every line of code I wrote for this website, every task I created, was filled with love for you. You're not just my best friend - you're my forever companion, my confidant, and my blessing.</p>
                     <p>Thank you for being you. Thank you for loving me. Thank you for making every day feel like Valentine's Day.</p>
-                    <p><strong>I love you more than words can express! 💕</strong></p>
+                    <p><strong>I cherish our friendship more than words can express! 💕</strong></p>
                     <p style="text-align: right; font-style: italic; margin-top: 20px;">- Your Dearest Friend ❤️</p>
                 </div>
 
                 <div style="margin-top: 50px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
                     <h3>✨ Happy Valentine's Day 2026! ✨</h3>
-                    <p>Here's to many more years of love, laughter, and beautiful moments together!</p>
+                    <p>Here's to many more years of friendship, laughter, and beautiful moments together!</p>
                 </div>
 
                 <!-- Rotating Ring -->
@@ -896,17 +986,11 @@ What we share together means...
                         <div class="ring-sparkle" style="bottom: 30px; left: 20px; animation-delay: 1.5s;"></div>
                     </div>
                 </div>
-                <div class="ring-message">💍 This is for YOU! 💍</div>
-                <p style="text-align: center; margin-top: 20px; font-size: 1.1em; color: #667eea;">Will you be best friend forever? 💕</p>
+                <div class="ring-message">💍 This symbolizes our friendship! 💍</div>
+                <p style="text-align: center; margin-top: 20px; font-size: 1.1em; color: #667eea;">Will you be my best friend forever? 💕</p>
                 
-                <!-- Download Buttons -->
-                <div style="margin-top: 50px;">
-                    <button class="btn" onclick="downloadResponses()" style="background: linear-gradient(135deg, #00b894 0%, #55efc4 100%);">
-                        📥 Download Beautiful Response Report
-                    </button>
-                    <button class="btn" onclick="downloadJSON()" style="background: linear-gradient(135deg, #fdcb6e 0%, #ffeaa7 100%);">
-                        💾 Download JSON Backup
-                    </button>
+                <div class="success-message show" style="margin-top: 30px;">
+                    ✅ Your responses have been sent successfully! 💕
                 </div>
             </div>
         </div>
@@ -914,17 +998,29 @@ What we share together means...
 
     <script>
         // ============================================
+        // EMAILJS & WHATSAPP CONFIGURATION
+        // ============================================
+        
+        // Initialize EmailJS - REPLACE THESE WITH YOUR ACTUAL CREDENTIALS
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Get from https://www.emailjs.com/
+        })();
+
+        const EMAIL_SERVICE_ID = "YOUR_SERVICE_ID"; // Your EmailJS service ID
+        const EMAIL_TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Your EmailJS template ID
+        const YOUR_EMAIL = "prakashm1342m@gmail.com"; // Your email
+        const YOUR_WHATSAPP = "7092784065"; // Your WhatsApp number
+
+        // ============================================
         // GLOBAL VARIABLES
         // ============================================
         let currentTask = 'entry';
-        let selectedChoices = [];
         let memoryCards = [];
         let flippedCards = [];
         let matchedPairs = 0;
         let wordSearchState = [];
         let foundWords = [];
         let selectedCells = [];
-        let isSelecting = false;
         let canvas, ctx;
         let isDrawing = false;
         let hasDrawn = false;
@@ -941,7 +1037,6 @@ What we share together means...
         // INITIALIZATION
         // ============================================
         
-        // Initialize hearts animation
         function createHearts() {
             const container = document.getElementById('heartsContainer');
             const heartSymbols = ['❤️', '💕', '💖', '💗', '💝', '💓', '💞'];
@@ -959,8 +1054,107 @@ What we share together means...
             }, 1000);
         }
 
-        // Initialize on page load
         createHearts();
+
+        // ============================================
+        // AUTO-SEND RESPONSES FUNCTION
+        // ============================================
+        
+        async function autoSendResponses() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('show');
+            
+            try {
+                // Format responses for email
+                const emailData = {
+                    to_email: YOUR_EMAIL,
+                    from_name: "Aswini - Valentine's Day 2026",
+                    timestamp: userResponses.timestamp,
+                    
+                    // Task 1
+                    first_thought: userResponses.responses.task1?.firstThought || "Not answered",
+                    favorite_place: userResponses.responses.task1?.favoritePlace || "Not answered",
+                    first_meet_date: userResponses.responses.task1?.firstMeetDate || "Not answered",
+                    
+                    // Task 2
+                    feelings: userResponses.responses.task2?.feelings?.join(', ') || "Not answered",
+                    
+                    // Task 3
+                    activities: userResponses.responses.task3?.favoriteActivities?.join(', ') || "Not answered",
+                    
+                    // Task 4
+                    memory_game: userResponses.responses.task4?.message || "Not completed",
+                    
+                    // Task 5
+                    love_letter: userResponses.responses.task5?.loveLetter || "No letter written",
+                    
+                    // Task 6
+                    word_search: userResponses.responses.task6?.message || "Not completed",
+                    words_found: userResponses.responses.task6?.wordsFound?.join(', ') || "",
+                    
+                    // Task 7
+                    promise: userResponses.responses.task7?.promise || "Not answered",
+                    
+                    // Task 8
+                    drawing_message: userResponses.responses.task8?.message || "No drawing"
+                };
+
+                // Try to send email
+                try {
+                    await emailjs.send(EMAIL_SERVICE_ID, EMAIL_TEMPLATE_ID, emailData);
+                    console.log('✅ Email sent successfully!');
+                } catch (emailError) {
+                    console.error('Email sending failed:', emailError);
+                }
+
+                // Generate WhatsApp message
+                const whatsappMessage = formatWhatsAppMessage();
+                
+                loadingOverlay.classList.remove('show');
+                return true;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                loadingOverlay.classList.remove('show');
+                return true; // Continue anyway
+            }
+        }
+
+        // Format WhatsApp message with all responses
+        function formatWhatsAppMessage() {
+            let message = `💝 *Valentine's Day 2026 - Aswini's Responses* 💝\n\n`;
+            message += `📅 Completed: ${userResponses.timestamp}\n\n`;
+            
+            message += `*Task 1: Friendship Quiz*\n`;
+            message += `• First thought: ${userResponses.responses.task1?.firstThought || 'N/A'}\n`;
+            message += `• Favorite place: ${userResponses.responses.task1?.favoritePlace || 'N/A'}\n`;
+            message += `• First meet: ${userResponses.responses.task1?.firstMeetDate || 'N/A'}\n\n`;
+            
+            message += `*Task 2: Feelings*\n`;
+            message += `${userResponses.responses.task2?.feelings?.join(', ') || 'N/A'}\n\n`;
+            
+            message += `*Task 3: Favorite Activities*\n`;
+            message += `${userResponses.responses.task3?.favoriteActivities?.join(', ') || 'N/A'}\n\n`;
+            
+            message += `*Task 4: Memory Game*\n`;
+            message += `${userResponses.responses.task4?.message || 'N/A'}\n\n`;
+            
+            message += `*Task 5: Love Letter*\n`;
+            message += `${userResponses.responses.task5?.loveLetter || 'N/A'}\n\n`;
+            
+            message += `*Task 6: Word Search*\n`;
+            message += `Words found: ${userResponses.responses.task6?.wordsFound?.join(', ') || 'N/A'}\n\n`;
+            
+            message += `*Task 7: Promise*\n`;
+            message += `${userResponses.responses.task7?.promise || 'N/A'}\n\n`;
+            
+            message += `*Task 8: Drawing*\n`;
+            message += `${userResponses.responses.task8?.message || 'N/A'}\n\n`;
+            
+            message += `❤️ Sent with love from your Valentine's website!`;
+            
+            return encodeURIComponent(message);
+        }
 
         // ============================================
         // ENTRY SCREEN
@@ -1015,7 +1209,7 @@ What we share together means...
         }
 
         // ============================================
-        // TASK 1: FRIENDSHIP QUESTIONS
+        // TASK VALIDATIONS
         // ============================================
         
         function validateTask1() {
@@ -1028,20 +1222,16 @@ What we share together means...
                 return;
             }
             
-            // Capture responses
             userResponses.responses.task1 = {
                 firstThought: q1,
                 favoritePlace: q2,
                 firstMeetDate: q3
             };
             
+            createConfetti();
             showScreen('task2');
         }
 
-        // ============================================
-        // TASK 2: FEELINGS
-        // ============================================
-        
         function toggleChoice(element) {
             element.classList.toggle('selected');
         }
@@ -1053,18 +1243,14 @@ What we share together means...
                 return;
             }
             
-            // Capture responses
             userResponses.responses.task2 = {
                 feelings: Array.from(selected).map(el => el.textContent.trim())
             };
             
+            createConfetti();
             showScreen('task3');
         }
 
-        // ============================================
-        // TASK 3: FAVORITE ACTIVITIES
-        // ============================================
-        
         function initPuzzle() {
             favoritesSelected = 0;
             document.getElementById('selectedCount').textContent = '0';
@@ -1087,7 +1273,6 @@ What we share together means...
                 return;
             }
             
-            // Capture responses
             const selected = document.querySelectorAll('#task3 .choice-btn.selected');
             userResponses.responses.task3 = {
                 favoriteActivities: Array.from(selected).map(el => el.textContent.trim())
@@ -1100,10 +1285,7 @@ What we share together means...
             }, 1500);
         }
 
-        // ============================================
-        // TASK 4: MEMORY GAME
-        // ============================================
-        
+        // Memory Game
         function initMemoryGame() {
             const symbols = ['💕', '💖', '💗', '💝', '💓', '💞', '💘', '💌'];
             const cards = [...symbols, ...symbols];
@@ -1125,7 +1307,6 @@ What we share together means...
         function renderMemoryGame() {
             const grid = document.getElementById('memoryGrid');
             grid.innerHTML = '';
-            grid.style.display = 'grid';
             
             memoryCards.forEach((symbol, index) => {
                 const card = document.createElement('div');
@@ -1165,6 +1346,7 @@ What we share together means...
                     document.getElementById('success4').classList.add('show');
                     document.getElementById('task4btn').style.display = 'block';
                     createConfetti();
+                    createFireworks();
                 }
             } else {
                 card1.element.classList.remove('flipped');
@@ -1175,7 +1357,6 @@ What we share together means...
         }
 
         function validateTask4() {
-            // Capture completion
             userResponses.responses.task4 = {
                 completed: true,
                 pairsMatched: matchedPairs,
@@ -1185,10 +1366,6 @@ What we share together means...
             showScreen('task5');
         }
 
-        // ============================================
-        // TASK 5: LOVE LETTER
-        // ============================================
-        
         function validateTask5() {
             const letter = document.getElementById('loveLetter').value.trim();
             if (letter.length < 10) {
@@ -1196,27 +1373,27 @@ What we share together means...
                 return;
             }
             
-            // Capture response
             userResponses.responses.task5 = {
                 loveLetter: letter
             };
             
+            createConfetti();
             showScreen('task6');
         }
 
-        // ============================================
-        // TASK 6: WORD SEARCH
-        // ============================================
-        
+        // Word Search - NOW WITH "FRIEND"!
         function initWordSearch() {
-            const words = ['LOVE', 'HAPPY', 'HEART', 'KISS', 'ROMANCE', 'FOREVER'];
+            const words = ['LOVE', 'HAPPY', 'HEART', 'FRIEND', 'FOREVER', 'JOY', 'SMILE'];
             const gridSize = 10;
             const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
             
+            // Place each word
             words.forEach(word => {
                 let placed = false;
-                while (!placed) {
-                    const direction = Math.floor(Math.random() * 3);
+                let attempts = 0;
+                while (!placed && attempts < 100) {
+                    attempts++;
+                    const direction = Math.floor(Math.random() * 3); // 0=horizontal, 1=vertical, 2=diagonal
                     const row = Math.floor(Math.random() * gridSize);
                     const col = Math.floor(Math.random() * gridSize);
                     
@@ -1227,6 +1404,7 @@ What we share together means...
                 }
             });
             
+            // Fill empty cells with random letters
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
                     if (grid[i][j] === '') {
@@ -1238,23 +1416,22 @@ What we share together means...
             wordSearchState = grid;
             foundWords = [];
             selectedCells = [];
-            isSelecting = false;
             document.getElementById('wordsCount').textContent = '0';
             renderWordSearch(words);
         }
 
         function canPlaceWord(grid, word, row, col, direction, gridSize) {
-            if (direction === 0) {
+            if (direction === 0) { // Horizontal
                 if (col + word.length > gridSize) return false;
                 for (let i = 0; i < word.length; i++) {
                     if (grid[row][col + i] !== '' && grid[row][col + i] !== word[i]) return false;
                 }
-            } else if (direction === 1) {
+            } else if (direction === 1) { // Vertical
                 if (row + word.length > gridSize) return false;
                 for (let i = 0; i < word.length; i++) {
                     if (grid[row + i][col] !== '' && grid[row + i][col] !== word[i]) return false;
                 }
-            } else {
+            } else { // Diagonal
                 if (row + word.length > gridSize || col + word.length > gridSize) return false;
                 for (let i = 0; i < word.length; i++) {
                     if (grid[row + i][col + i] !== '' && grid[row + i][col + i] !== word[i]) return false;
@@ -1305,7 +1482,7 @@ What we share together means...
         }
 
         function handleCellClick(cell) {
-            const words = ['LOVE', 'HAPPY', 'HEART', 'KISS', 'ROMANCE', 'FOREVER'];
+            const words = ['LOVE', 'HAPPY', 'HEART', 'FRIEND', 'FOREVER', 'JOY', 'SMILE'];
             
             if (cell.classList.contains('selected')) {
                 cell.classList.remove('selected');
@@ -1340,11 +1517,20 @@ What we share together means...
                     selectedCells = [];
                     document.getElementById('wordsCount').textContent = foundWords.length;
                     
-                    if (foundWords.length === 6) {
+                    // Celebrate finding FRIEND!
+                    if (word === 'FRIEND') {
+                        createFireworks();
+                        setTimeout(() => {
+                            alert('🎊 YES! We are FRIENDS forever! 🎊');
+                        }, 500);
+                    }
+                    
+                    if (foundWords.length === 7) {
                         setTimeout(() => {
                             document.getElementById('success6').classList.add('show');
                             document.getElementById('task6btn').style.display = 'block';
                             createConfetti();
+                            createFireworks();
                         }, 500);
                     }
                 }
@@ -1352,20 +1538,15 @@ What we share together means...
         }
 
         function validateTask6() {
-            // Capture completion
             userResponses.responses.task6 = {
                 completed: true,
                 wordsFound: foundWords,
-                message: "Found all the love words! 🔍💕"
+                message: "Found all the special words including FRIEND! 🔍💕"
             };
             
             showScreen('task7');
         }
 
-        // ============================================
-        // TASK 7: PROMISE
-        // ============================================
-        
         function selectSingleChoice(element) {
             document.querySelectorAll('#task7 .choice-btn').forEach(btn => {
                 btn.classList.remove('selected');
@@ -1380,18 +1561,15 @@ What we share together means...
                 return;
             }
             
-            // Capture response
             userResponses.responses.task7 = {
                 promise: selected.textContent.trim()
             };
             
+            createConfetti();
             showScreen('task8');
         }
 
-        // ============================================
-        // TASK 8: DRAWING
-        // ============================================
-        
+        // Canvas Drawing
         function initCanvas() {
             canvas = document.getElementById('drawCanvas');
             ctx = canvas.getContext('2d');
@@ -1464,281 +1642,44 @@ What we share together means...
             document.getElementById('task8btn').style.display = 'none';
         }
 
-        function validateTask8() {
+        async function validateTask8() {
             if (!hasDrawn) {
                 showError(8);
                 return;
             }
             
-            // Capture drawing as image
             userResponses.responses.task8 = {
                 drawing: canvas.toDataURL('image/png'),
-                message: "Drew a beautiful heart! 💝"
+                message: "Drew something beautiful! 💝"
             };
             
-            // Auto-download the responses
-            setTimeout(() => {
-                downloadResponses();
-            }, 500);
+            // AUTOMATICALLY send responses via email and prepare WhatsApp
+            await autoSendResponses();
             
+            // Show final screen with fireworks!
+            createFireworks();
+            createConfetti();
             showScreen('final');
+            
+            // Optional: Auto-open WhatsApp after 3 seconds
+            setTimeout(() => {
+                const whatsappMsg = formatWhatsAppMessage();
+                const whatsappURL = `https://wa.me/${YOUR_WHATSAPP}?text=${whatsappMsg}`;
+                // Uncomment the line below to auto-open WhatsApp
+                // window.open(whatsappURL, '_blank');
+            }, 3000);
         }
 
-        // ============================================
-        // FINAL CELEBRATION
-        // ============================================
-        
         function celebrateFinal() {
             createFireworks();
             createConfetti();
-            setInterval(createFireworks, 3000);
+            setInterval(() => {
+                createFireworks();
+                createConfetti();
+            }, 3000);
         }
 
-        // ============================================
-        // DOWNLOAD FUNCTIONS
-        // ============================================
-        
-        function generateHTMLReport() {
-            const responses = userResponses.responses;
-            
-            return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aswini's Valentine's Day Responses 💝</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Georgia', serif;
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            padding: 40px 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        .content {
-            padding: 40px;
-        }
-        .section {
-            margin-bottom: 40px;
-            border-left: 5px solid #667eea;
-            padding-left: 20px;
-        }
-        .section h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.8em;
-        }
-        .answer {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 15px 0;
-            border: 2px solid #e9ecef;
-        }
-        .answer strong {
-            color: #d946ef;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .love-letter {
-            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
-            padding: 30px;
-            border-radius: 15px;
-            font-style: italic;
-            font-size: 1.1em;
-            white-space: pre-wrap;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        .drawing {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .drawing img {
-            max-width: 100%;
-            border: 5px solid #667eea;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        .feelings, .activities {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .tag {
-            background: #667eea;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-        }
-        .footer {
-            background: #f8f9fa;
-            padding: 30px;
-            text-align: center;
-            color: #666;
-        }
-        .hearts {
-            color: #e74c3c;
-            font-size: 1.5em;
-            margin: 20px 0;
-        }
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>💝 Valentine's Day Journey 💝</h1>
-            <p>Aswini's Beautiful Responses</p>
-            <p style="font-size: 0.9em; opacity: 0.8;">${userResponses.timestamp}</p>
-        </div>
-        
-        <div class="content">
-            <div class="hearts">❤️ 💕 💖 💗 💝 💓 💞 💘</div>
-            
-            <div class="section">
-                <h2>📝 Task 1: Our Friendship Story</h2>
-                <div class="answer">
-                    <strong>First thought when we met:</strong>
-                    ${responses.task1?.firstThought || 'Not answered'}
-                </div>
-                <div class="answer">
-                    <strong>Our favorite place to eat together:</strong>
-                    ${responses.task1?.favoritePlace || 'Not answered'}
-                </div>
-                <div class="answer">
-                    <strong>Our first meeting date:</strong>
-                    ${responses.task1?.firstMeetDate || 'Not answered'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>💖 Task 2: Feelings About Us</h2>
-                <div class="feelings">
-                    ${responses.task2?.feelings?.map(f => `<span class="tag">${f}</span>`).join('') || '<p>Not answered</p>'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>💑 Task 3: Our Favorite Activities</h2>
-                <div class="activities">
-                    ${responses.task3?.favoriteActivities?.map(a => `<span class="tag">${a}</span>`).join('') || '<p>Not answered</p>'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>🎮 Task 4: Memory Game</h2>
-                <div class="answer">
-                    ${responses.task4?.message || 'Not completed'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>💌 Task 5: Love Letter</h2>
-                <div class="love-letter">
-                    ${responses.task5?.loveLetter || 'No letter written'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>🔍 Task 6: Word Search</h2>
-                <div class="answer">
-                    ${responses.task6?.message || 'Not completed'}
-                    ${responses.task6?.wordsFound ? `<br><strong>Words found:</strong> ${responses.task6.wordsFound.join(', ')}` : ''}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>💍 Task 7: Our Promise</h2>
-                <div class="answer">
-                    ${responses.task7?.promise || 'Not answered'}
-                </div>
-            </div>
-            
-            <div class="section">
-                <h2>💝 Task 8: Heart Drawing</h2>
-                <div class="drawing">
-                    ${responses.task8?.drawing ? `<img src="${responses.task8.drawing}" alt="Heart Drawing">` : '<p>No drawing created</p>'}
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <div class="hearts">❤️ 💕 💖 💗 💝 💓 💞 💘</div>
-            <h3>Thank you for completing this journey! 💕</h3>
-            <p>Every response is a treasure to my heart.</p>
-            <p style="margin-top: 20px; font-style: italic;">Created with love on Valentine's Day 2026</p>
-        </div>
-    </div>
-</body>
-</html>`;
-        }
-
-        function downloadResponses() {
-            const htmlContent = generateHTMLReport();
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Aswini_Valentine_Responses_${Date.now()}.html`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function downloadJSON() {
-            const jsonContent = JSON.stringify(userResponses, null, 2);
-            const blob = new Blob([jsonContent], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Aswini_Valentine_Responses_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-        
+        // Helper Functions
         function showError(taskNum) {
             const error = document.getElementById('error' + taskNum);
             error.classList.add('show');
